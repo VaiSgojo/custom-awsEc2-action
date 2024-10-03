@@ -1,0 +1,48 @@
+name: "aws-ec2"
+description: "transfer file from local to Ec2"
+
+on:
+  workflow_dispatch:
+
+inputs:
+    name:
+        description: "name of the file"
+        required: true
+    source:
+        description: "path in the repository"
+        required: true
+    destination:
+        description: "instance path"
+        required: true
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+  ssh-to-instance:
+    runs-on: ubuntu-latest
+    needs: checkout 
+
+    steps:
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+  transfer-file:
+    runs-on: ubuntu-latest
+    needs: ssh-to-instance
+
+    steps:
+      - name: Transfer file to instance
+        run: |
+          scp -i ~/.ssh/id_rsa "${{ github.event.inputs.source }}" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:"${{ github.event.inputs.destination }}"
+      - name: output file
+        run: |
+          

@@ -13,5 +13,5 @@ jobs:
           source: ./transferfile.txt
           destination: /
         steps:
-      - uses: actions/checkout@v3
-      - uses: ./
+          - uses: actions/checkout@v3
+          - uses: ./

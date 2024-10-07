@@ -1,0 +1,17 @@
+name: test-workflow
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use custom action
+        uses: ./.github/actions/action
+        with:
+          name: 
+          source: 
+          destination: 
+       

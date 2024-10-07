@@ -3,23 +3,22 @@ description: "Transfer file from local to EC2"
 
 on:
   workflow_dispatch:
-
-inputs:
-  name:
-    description: "Name of the file"
-    required: true
-  source:
-    description: "Path in the repository"
-    required: true
-  destination:
-    description: "Instance path"
-    required: true
-  instance_ip:
-    description: "EC2 Instance IP address"
-    required: true
-  ssh_key:
-    description: "SSH private key for accessing the EC2 instance"
-    required: true
+    inputs:
+      name:
+         description: "Name of the file"
+         required: true
+      source:
+         description: "Path in the repository"
+         required: true
+      destination:
+         description: "Instance path"
+         required: true
+      instance_ip:
+         description: "EC2 Instance IP address"
+         required: true
+      ssh_key:
+         description: "SSH private key for accessing the EC2 instance"
+         required: true
 
 jobs:
   transfer_file:
@@ -40,6 +39,6 @@ jobs:
           # Save the SSH key
           echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          
+
           # Copy the file to the EC2 instance
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SOURCE_PATH ec2-user@$EC2_INSTANCE_IP:$DESTINATION_PATH

@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use custom action
-        uses: ./.github/actions
+        uses: ./.github/actions/action.yml
         with:
           name: transferfile
           source: ./transferfile.txt

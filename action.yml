@@ -29,10 +29,10 @@ jobs:
 
       - name: Copy file to EC2 instance
         env:
-          EC2_INSTANCE_IP: ${{ inputs.instance_ip }}
-          SSH_KEY: ${{ inputs.ssh_key }}
-          SOURCE_PATH: ${{ inputs.source }}
-          DESTINATION_PATH: ${{ inputs.destination }}
+          EC2_INSTANCE_IP: ${{ github.event.inputs.instance_ip }}
+          SSH_KEY: ${{ github.event.inputs.ssh_key }}
+          SOURCE_PATH: ${{ github.event.inputs.source }}
+          DESTINATION_PATH: ${{ github.event.inputs.destination }}
         run: |
           # Create the SSH key directory
           mkdir -p ~/.ssh

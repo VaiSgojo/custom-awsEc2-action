@@ -5,19 +5,13 @@ on:
 
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
   Execute:
-      - name: Use custom action
+        name: Use custom action
         runs-on: ubuntu-latest
-        uses: ./
         with:
           name: transferfile
           source: ./transferfile.txt
           destination: /
-       
+        steps:
+      - uses: actions/checkout@v3
+      - uses: ./

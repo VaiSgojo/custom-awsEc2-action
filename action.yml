@@ -1,25 +1,25 @@
 name: "aws-ec2"
-description: "transfer file from local to Ec2"
+description: "Transfer file from local to EC2"
 
 on:
   workflow_dispatch:
 
 inputs:
-    name:
-        description: "name of the file"
-        required: true
-    source:
-        description: "path in the repository"
-        required: true
-    destination:
-        description: "instance path"
-        required: true
-    instance_ip:
-        description: "EC2 Instance IP address"
-        required: true
-    ssh_key:
-        description: "SSH private key for accessing the EC2 instance"
-        required: true
+  name:
+    description: "Name of the file"
+    required: true
+  source:
+    description: "Path in the repository"
+    required: true
+  destination:
+    description: "Instance path"
+    required: true
+  instance_ip:
+    description: "EC2 Instance IP address"
+    required: true
+  ssh_key:
+    description: "SSH private key for accessing the EC2 instance"
+    required: true
 
 jobs:
   transfer_file:
@@ -30,10 +30,10 @@ jobs:
 
       - name: Copy file to EC2 instance
         env:
-          EC2_INSTANCE_IP: ${{ inputs.instance_ip }}
-          SSH_KEY: ${{ inputs.ssh_key }}
-          SOURCE_PATH: ${{ inputs.source }}
-          DESTINATION_PATH: ${{ inputs.destination }}
+          EC2_INSTANCE_IP: ${{ github.event.inputs.instance_ip }}
+          SSH_KEY: ${{ github.event.inputs.ssh_key }}
+          SOURCE_PATH: ${{ github.event.inputs.source }}
+          DESTINATION_PATH: ${{ github.event.inputs.destination }}
         run: |
           # Create the SSH key directory
           mkdir -p ~/.ssh
@@ -43,4 +43,3 @@ jobs:
           
           # Copy the file to the EC2 instance
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SOURCE_PATH ec2-user@$EC2_INSTANCE_IP:$DESTINATION_PATH
-  

@@ -11,10 +11,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        
+
   Execute:
       - name: Use custom action
-        needs: checkout 
+        runs-on: ubuntu-latest
         uses: ./
         with:
           name: transferfile

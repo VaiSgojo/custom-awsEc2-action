@@ -3,15 +3,17 @@ name: test-workflow
 on:
   workflow_dispatch:
 
-
 jobs:
   Execute:
-        name: Use custom action
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  
+
+      - name: Use custom action
+        uses: ./  
         with:
           name: transferfile
-          source: ./transferfile.txt
-          destination: /
-        steps:
-          - uses: actions/checkout@v3
-          - uses: ./
+          source: ./transferfile.txt  
+          destination: /  

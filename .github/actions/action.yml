@@ -45,4 +45,4 @@ jobs:
           scp -i ~/.ssh/id_rsa "${{ github.event.inputs.source }}" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:"${{ github.event.inputs.destination }}"
       - name: output file
         run: |
-          
+          echo "File transferred: ${{ github.event.inputs.name }}"

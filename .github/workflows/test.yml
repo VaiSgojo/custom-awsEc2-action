@@ -5,13 +5,16 @@ on:
 
 
 jobs:
-  execute:
+  Execute:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Use custom action
-        uses: ./.github/actions/action
+        uses: ./.github/actions/action.yml
         with:
-          name: 
-          source: 
-          destination: 
+          name: transferfile
+          source: /transferfile.txt
+          destination: /
        

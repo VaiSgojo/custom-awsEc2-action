@@ -1,48 +1,46 @@
 name: "aws-ec2"
-description: "Transfer file from local to EC2"
+description: "transfer file from local to Ec2"
 
 on:
   workflow_dispatch:
 
 inputs:
-  name:
-    description: "Name of the file"
-    required: true
-  source:
-    description: "Path in the repository"
-    required: true
-  destination:
-    description: "Instance path"
-    required: true
+    name:
+        description: "name of the file"
+        required: true
+    source:
+        description: "path in the repository"
+        required: true
+    destination:
+        description: "instance path"
+        required: true
+    instance_ip:
+        description: "EC2 Instance IP address"
+        required: true
+    ssh_key:
+        description: "SSH private key for accessing the EC2 instance"
+        required: true
 
 jobs:
-  checkout:
+  transfer_file:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  ssh-to-instance:
-    runs-on: ubuntu-latest
-    needs: checkout 
-
-    steps:
-      - name: Set up SSH
+      - name: Copy file to EC2 instance
+        env:
+          EC2_INSTANCE_IP: ${{ inputs.instance_ip }}
+          SSH_KEY: ${{ inputs.ssh_key }}
+          SOURCE_PATH: ${{ inputs.source }}
+          DESTINATION_PATH: ${{ inputs.destination }}
         run: |
+          # Create the SSH key directory
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          # Save the SSH key
+          echo "${SSH_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
-
-  transfer-file:
-    runs-on: ubuntu-latest
-    needs: ssh-to-instance
-
-    steps:
-      - name: Transfer file to instance
-        run: |
-          scp -i ~/.ssh/id_rsa "${{ inputs.source }}" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:"${{ inputs.destination }}"
-      - name: Output file
-        run: |
-          echo "File transferred: ${{ inputs.name }}"
+          
+          # Copy the file to the EC2 instance
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SOURCE_PATH ec2-user@$EC2_INSTANCE_IP:$DESTINATION_PATH
+  
